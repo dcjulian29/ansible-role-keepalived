@@ -1,0 +1,72 @@
+---
+- name: Include OS-specific variables
+  ansible.builtin.include_vars: "{{ ansible_os_family | lower }}.yml"
+
+- name: Install Keepalived package
+  ansible.builtin.package:
+    name: "{{ keepalived_package_name }}"
+    state: "{{ keepalived_package_state }}"
+    update_cache: true
+    cache_valid_time: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary(600, omit) }}"
+  notify:
+    - Restart Keepalived
+
+- name: Allow applications to bind on non local addresses for IPv4
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    state: present
+  when: keepalived_bind_on_non_local | bool
+  loop:
+    - name: "net.ipv4.ip_nonlocal_bind"
+      value: 1
+    - name: "net.ipv4.tcp_retries2"
+      value: "{{ keepalived_sysctl_tcp_retries }}"
+  notify:
+    - Restart Keepalived
+
+- name: Allow consuming apps to bind on non local addresses for IPv6
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    state: present
+  when:
+    - keepalived_bind_on_non_local | bool
+    - ansible_default_ipv6 | length > 0
+  loop:
+    - name: "net.ipv6.ip_nonlocal_bind"
+      value: 1
+  notify:
+    - Restart Keepalived
+
+- name: Configure keepalived extra params
+  ansible.builtin.lineinfile:
+    line: "{{ item }}"
+    regexp: "^{{ item.split('=')[0] }}"
+    dest: "{{ keepalived_options_path }}"
+    state: present
+  loop: "{{ keepalived_daemon_options_overrides }}"
+  notify:
+    - Restart Keepalived
+
+- name: Configure keepalived
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: "{{ keepalived_config_file_path }}"
+    mode: "0640"
+    validate: "keepalived --config-test -f %s"
+  notify:
+    - Restart Keepalived
+
+- name: Ensuring keepalived is enabled and started
+  ansible.builtin.service:
+    daemon_reload: true
+    name: keepalived
+    state: started
+    enabled: true
+  register: _servicestart
+
+- name: Ensure all handlers run before continuing
+  ansible.builtin.meta: flush_handlers

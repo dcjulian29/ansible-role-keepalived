@@ -1,0 +1,34 @@
+---
+keepalived_bind_on_non_local: true
+keepalived_config_file_path: "/etc/keepalived/keepalived.conf"
+keepalived_daemon_options_overrides: []
+keepalived_package_state: "{{ ((keepalived_use_latest | default(true)) | bool) | ternary('latest','present') }}"
+keepalived_sysctl_tcp_retries: 8
+keepalived_use_latest: true
+
+keepalived_instances: []
+# - name: VI_1
+#   interface: ens18
+#   state: MASTER
+#   virtual_router_id: 55
+#   priority: 150
+#   #use_vmac: no
+#   #vmac_xmit_base: no
+#   #nopreempt: no
+#   #preempt_delay: 500
+#   #advert_int: 1
+#   #dont_track_primary: no
+#   #accept: no
+#   #native_ipv6: no
+#   #authentication_type: PASS
+#   #authentication_password: ""
+#   #garp_master_repeat:
+#   #garp_master_refresh:
+#   #unicast_src_ip: 192.168.0.1
+#   #unicast_peers:
+#     #- 192.168.0.2/24
+#   #vips:
+#     #- 10.10.10.55
+#   #vips_excluded: []
+#   #virtual_routes: []
+#   #virtual_rules: []

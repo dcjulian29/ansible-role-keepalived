@@ -1,0 +1,3 @@
+---
+keepalived_options_path: /etc/default/keepalived
+keepalived_package_name: keepalived
