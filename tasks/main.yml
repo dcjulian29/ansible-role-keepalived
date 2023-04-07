@@ -67,6 +67,7 @@
     state: started
     enabled: true
   register: _servicestart
+  when: not ansible_check_mode
 
 - name: Ensure all handlers run before continuing
   ansible.builtin.meta: flush_handlers
