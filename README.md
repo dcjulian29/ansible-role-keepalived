@@ -1,6 +1,6 @@
 # Ansible Role: keepalived
 
-[![CI](https://github.com/dcjulian29/ansible-role-keepalived/actions/workflows/ci.yml/badge.svg)](https://github.com/dcjulian29/ansible-role-keepalived/actions/workflows/ci.yml) [![GitHub Issues](https://img.shields.io/github/issues-raw/dcjulian29/ansible-role-keepalived.svg)](https://github.com/dcjulian29/ansible-role-keepalived/issues)
+[![Lint](https://github.com/dcjulian29/ansible-role-keepalived/actions/workflows/lint.yml/badge.svg)](https://github.com/dcjulian29/ansible-role-keepalived/actions/workflows/lint.yml) [![GitHub Issues](https://img.shields.io/github/issues-raw/dcjulian29/ansible-role-keepalived.svg)](https://github.com/dcjulian29/ansible-role-keepalived/issues)
 
 This an Ansible role to install and configure Keepalived.
 
@@ -28,12 +28,4 @@ ansible-galaxy install -r requirements.yml
 
 ## Dependencies
 
-None
-
-## Role Variables
-
-TODO
-
-## Example Playbook
-
-The examples directory include one or more example playbooks.
+- None
