@@ -1,6 +1,6 @@
 ---
 - name: Include OS-specific variables
-  ansible.builtin.include_vars: "{{ ansible_os_family | lower }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_facts['os_family'] | lower }}.yml"
 
 - name: Install Keepalived package
   ansible.builtin.package:
@@ -34,7 +34,7 @@
     state: present
   when:
     - keepalived_bind_on_non_local | bool
-    - ansible_default_ipv6 | length > 0
+    - ansible_facts['default_ipv6'] | length > 0
   loop:
     - name: "net.ipv6.ip_nonlocal_bind"
       value: 1
